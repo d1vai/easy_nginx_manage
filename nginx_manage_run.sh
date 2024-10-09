@@ -1,21 +1,41 @@
-# 检查 Docker Compose 是否已安装
-if ! command -v docker-compose &> /dev/null
+#!/bin/bash
+
+# 检查 Docker 是否已安装
+if ! command -v docker &> /dev/null
 then
-    echo "Docker Compose 未安装，正在安装..."
-    sudo curl -L "https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    echo "Docker Compose 已成功安装！版本信息："
-    docker-compose --version
+    echo "Docker 未安装，正在安装..."
+    
+    # 更新 apt 包索引
+    sudo apt-get update
+    
+    # 安装依赖
+    sudo apt-get install -y ca-certificates curl gnupg lsb-release
+    
+    # 添加 Docker 官方 GPG 密钥
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    
+    # 设置 Docker 仓库
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    
+    # 更新 apt 包索引并安装 Docker
+    sudo apt-get update
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    
+    echo "Docker 已成功安装！"
 else
-    echo "Docker Compose 已安装，版本信息："
-    docker-compose --version
+    echo "Docker 已安装，版本信息："
+    docker --version
 fi
 
-# 检查 Docker 服务是否正在运行
+# 检查 Docker 服务是否运行
 if ! sudo systemctl is-active --quiet docker
 then
     echo "Docker 未启动，正在启动..."
     sudo systemctl start docker
+    
     if sudo systemctl is-active --quiet docker
     then
         echo "Docker 已成功启动。"
