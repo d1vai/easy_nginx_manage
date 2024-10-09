@@ -50,8 +50,13 @@ fi
 # 检查 docker-compose.yml 文件是否存在
 if [ -f "./docker-compose.yml" ]; then
     echo "找到 docker-compose.yml 文件，启动 Docker Compose..."
-    docker-compose up -d
+    if ! docker-compose up -d; then
+        echo "错误：当前用户没有权限访问 Docker 守护进程。请尝试运行以下命令以解决此问题："
+        echo "sudo usermod -aG docker $USER && newgrp docker"
+        exit 1
+    fi
 else
     echo "错误：当前目录下没有找到 docker-compose.yml 文件。"
     exit 1
 fi
+
