@@ -9,3 +9,11 @@ else
     echo "Docker Compose 已安装，版本信息："
     docker-compose --version
 fi
+
+# 检查 docker-compose.yml 文件是否存在
+if [ -f "./docker-compose.yml" ]; then
+    echo "找到 docker-compose.yml 文件，启动 Docker Compose..."
+    docker-compose up -d
+else
+    echo "错误：当前目录下没有找到 docker-compose.yml 文件。"
+fi
