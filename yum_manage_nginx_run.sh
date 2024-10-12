@@ -10,12 +10,9 @@ then
     
     # 安装依赖
     sudo yum install -y yum-utils ca-certificates curl gnupg2 device-mapper-persistent-data lvm2
-
-    # 添加 Docker 仓库
-    sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-
+    
     # 安装 Docker
-    sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    sudo yum install docker
 
     echo "Docker 已成功安装！"
 else
