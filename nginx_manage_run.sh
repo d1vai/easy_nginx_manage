@@ -47,6 +47,30 @@ else
     echo "Docker 正在运行。"
 fi
 
+# 检查 Docker Compose 是否已安装
+if ! command -v docker-compose &> /dev/null
+then
+    echo "Docker Compose 未安装，正在安装..."
+
+    # 下载 Docker Compose 二进制文件
+    sudo curl -L "https://github.com/docker/compose/releases/download/v2.11.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+    # 为 Docker Compose 二进制文件赋予执行权限
+    sudo chmod +x /usr/local/bin/docker-compose
+
+    # 验证是否安装成功
+    if command -v docker-compose &> /dev/null
+    then
+        echo "Docker Compose 已成功安装，版本信息："
+        docker-compose --version
+    else
+        echo "Docker Compose 安装失败。"
+    fi
+else
+    echo "Docker Compose 已安装，版本信息："
+    docker-compose --version
+fi
+
 # 检查 docker-compose.yml 文件是否存在
 if [ -f "./docker-compose.yml" ]; then
     echo "找到 docker-compose.yml 文件，启动 Docker Compose..."
