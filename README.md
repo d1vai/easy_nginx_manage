@@ -18,3 +18,6 @@ sh yum_manage_nginx_run.sh
 ```
 
 change ec2-user to your sever login username
+
+init username: admin@example.com
+init pwd: changeme
